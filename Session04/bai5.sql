@@ -20,9 +20,15 @@ VALUES ('Nguyễn Văn Huy', 'IT', 'Developer', 18000000, 1000000, 2021),
        ('Bùi Thị Lan', 'HR', 'HR Manager', 20000000, 3000000, 2018),
        ('Đặng Hữu Tài', 'IT', 'Developer', 17000000, NULL, 2022);
 
-DELETE
-FROM employees
-WHERE id = 4;
+
+delete
+from employees
+where id = (select id from employees
+            where full_name = (select full_name
+                               from emplyees
+                               group by full_name, department, position
+                               having count(id) >= 2)
+            limit 1);
 
 update employees
 set salary = salary*1.1
