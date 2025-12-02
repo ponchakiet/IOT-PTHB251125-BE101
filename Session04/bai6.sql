@@ -1,0 +1,66 @@
+set search_path to session04;
+
+CREATE TABLE books
+(
+    id           SERIAL PRIMARY KEY,
+    title        VARCHAR(255) NOT NULL,
+    author       VARCHAR(100) NOT NULL,
+    category     VARCHAR(50)  NOT NULL,
+    publish_year INT          NOT NULL,
+    price        BIGINT,
+    stock        INT
+);
+
+INSERT INTO books (title, author, category, publish_year, price, stock)
+VALUES ('Lập trình C cơ bản', 'Nguyễn Văn Nam', 'CNTT', 2018, 95000, 20),
+       ('Học SQL qua ví dụ', 'Trần Thị Hạnh', 'CSDL', 2020, 125000, 12),
+       ('Lập trình C cơ bản', 'Nguyễn Văn Nam', 'CNTT', 2018, 95000, 20),
+       ('Phân tích dữ liệu với Python', 'Lê Quốc Bảo', 'CNTT', 2022, 180000, NULL),
+       ('Quản trị cơ sở dữ liệu', 'Nguyễn Thị Minh', 'CSDL', 2021, 150000, 5),
+       ('Học máy cho người mới bắt đầu', 'Nguyễn Văn Nam', 'AI', 2023, 220000, 8),
+       ('Khoa học dữ liệu cơ bản', 'Nguyễn Văn Nam', 'AI', 2023, 220000, NULL);
+
+delete
+from books
+where id in (select id
+             from books
+             where title = (select title
+                            from books
+                            group by title, author, publish_year
+                            having count(id) >= 2)
+             limit 1 offset 1);
+
+UPDATE books
+SET stock = 0
+WHERE stock IS NULL;
+
+UPDATE books
+SET price = price * 1.10
+WHERE publish_year >= 2021
+  AND price < 200000;
+
+SELECT title,
+       author,
+       category,
+       price
+FROM books
+WHERE category IN ('CNTT', 'AI')
+  AND price BETWEEN 100000 AND 250000
+ORDER BY price DESC,
+         title ASC;
+
+SELECT title,
+       author
+FROM books
+WHERE title ILIKE '%học%';
+
+SELECT DISTINCT category
+FROM books
+WHERE publish_year > 2020;
+
+SELECT id,
+       title,
+       price
+FROM books
+ORDER BY id ASC
+LIMIT 2 OFFSET 1;
