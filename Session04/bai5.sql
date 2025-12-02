@@ -23,7 +23,7 @@ VALUES ('Nguyễn Văn Huy', 'IT', 'Developer', 18000000, 1000000, 2021),
 
 delete
 from employees
-where id = (select id from employees
+where id in (select id from employees
             where full_name = (select full_name
                                from emplyees
                                group by full_name, department, position
