@@ -56,7 +56,7 @@ WHERE title ILIKE '%học%';
 
 SELECT DISTINCT category
 FROM books
-WHERE publish_year > 2020;
+WHERE stock > 0 AND publish_year > 2020;
 
 SELECT id,
        title,
